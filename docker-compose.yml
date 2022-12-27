@@ -1,12 +1,12 @@
 version: "3.9"
 services:
   keycloak:
-    image: keycloak:1.0.3
+    image: frcalderon/keycloak:1.0.0
     ports:
       - "9090:8080"
     volumes:
-      - /Users/frank/Keycloak/conf:/keycloak/conf
-      - /Users/frank/Keycloak/db:/keycloak/data/h2
+      - conf:/keycloak/conf
+      - db:/keycloak/data/h2
     networks:
       demo:
         aliases:
