@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  keycloak:
+    image: keycloak:1.0.3
+    ports:
+      - "9090:8080"
+    volumes:
+      - /Users/frank/Keycloak/conf:/keycloak/conf
+      - /Users/frank/Keycloak/db:/keycloak/data/h2
+    networks:
+      demo:
+        aliases:
+          - "keycloak"
+    
+networks:
+  demo:
+    driver: bridge
