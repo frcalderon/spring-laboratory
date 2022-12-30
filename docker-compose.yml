@@ -4,55 +4,57 @@ services:
     image: frcalderon/keycloak:1.0.0
     container_name: keycloak
     ports:
-      - "8082:8080"
+      - "8081:8080"
     restart: unless-stopped
     volumes:
       - ./conf:/keycloak/conf
       - ./db:/keycloak/data/h2
-    networks:
-      demo:
-        aliases:
-          - "keycloak"
+    # networks:
+    #   demo:
+    #     aliases:
+    #       - "keycloak"
     healthcheck:
-      test: curl --fail http://host.docker.internal:8082/realms/demo || exit 1
+      test: curl --fail http://host.docker.internal:8081/realms/demo || exit 1
       interval: 60s
       retries: 5
       start_period: 20s
       timeout: 10s
   config-server:
-    image: config-server:1.0.0
+    image: frcalderon/config-server:1.0.0
     container_name: config-server
     ports:
       - "8888:8888"
     restart: unless-stopped
-    networks:
-      demo:
-        aliases:
-          - "config-server"
+    # networks:
+    #   demo:
+    #     aliases:
+    #       - "config-server"
   discovery-server:
-    image: discovery-server:1.0.0
+    image: frcalderon/discovery-server:1.0.0
     container_name: discovery-server
     ports:
       - "8761:8761"
     restart: unless-stopped
-    networks:
-      demo:
-        aliases:
-          - "discovery-server"
+    environment:
+      - SPRING_PROFILES_ACTIVE=development
+    # networks:
+    #   demo:
+    #     aliases:
+    #       - "discovery-server"
     depends_on:
       - config-server
   api-gateway:
-    image: api-gateway:1.0.0
+    image: frcalderon/api-gateway:1.0.0
     container_name: api-gateway
     ports:
-      - "8081:8081"
+      - "8080:8080"
     restart: unless-stopped
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
-    networks:
-      demo:
-        aliases:
-          - "api-gateway"
+      - SPRING_PROFILES_ACTIVE=development
+    # networks:
+    #   demo:
+    #     aliases:
+    #       - "api-gateway"
     depends_on:
       - keycloak
       - config-server
@@ -64,24 +66,42 @@ services:
     ports:
       - "3306:3306"
     restart: unless-stopped
-    networks:
-      demo:
-        aliases:
-          - "discovery-server"
+    volumes:
+      - ./mariadb_database:/var/lib/mysql
+    # networks:
+    #   demo:
+    #     aliases:
+    #       - "mariadb"
   phpmyadmin:
     image: phpmyadmin
     container_name: phpmyadmin
     ports:
-      - 8085:8080
+      - 8082:80
     restart: unless-stopped
     environment:
       - PMA_HOST=mariadb
       - PMA_PORT=3306
       - PMA_ARBITRARY=1
-    networks:
-      demo:
-        aliases:
-          - "discovery-server"
+    # networks:
+    #   demo:
+    #     aliases:
+    #       - "phpmyadmin"
+    depends_on:
+      - mariadb
+  demo:
+    image: frcalderon/demo-microservice:1.0.0
+    container_name: demo-microservice
+    ports:
+      - "9001:8080"
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILES_ACTIVE=development
+    # networks:
+    #   demo:
+    #     aliases:
+    #       - "demo"
+    depends_on:
+      - config-server
 networks:
   demo:
     name: demo-network
