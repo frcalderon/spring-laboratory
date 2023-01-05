@@ -9,10 +9,10 @@ services:
     volumes:
       - ./conf:/keycloak/conf
       - ./db:/keycloak/data/h2
-    # networks:
-    #   demo:
-    #     aliases:
-    #       - "keycloak"
+    networks:
+      demo:
+        aliases:
+          - "keycloak"
     healthcheck:
       test: curl --fail http://host.docker.internal:8081/realms/demo || exit 1
       interval: 60s
@@ -25,10 +25,10 @@ services:
     ports:
       - "8888:8888"
     restart: unless-stopped
-    # networks:
-    #   demo:
-    #     aliases:
-    #       - "config-server"
+    networks:
+      demo:
+        aliases:
+          - "config-server"
   discovery-server:
     image: frcalderon/discovery-server:1.0.0
     container_name: discovery-server
@@ -37,10 +37,10 @@ services:
     restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=development
-    # networks:
-    #   demo:
-    #     aliases:
-    #       - "discovery-server"
+    networks:
+      demo:
+        aliases:
+          - "discovery-server"
     depends_on:
       - config-server
   api-gateway:
@@ -51,10 +51,10 @@ services:
     restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=development
-    # networks:
-    #   demo:
-    #     aliases:
-    #       - "api-gateway"
+    networks:
+      demo:
+        aliases:
+          - "api-gateway"
     depends_on:
       - keycloak
       - config-server
@@ -68,10 +68,10 @@ services:
     restart: unless-stopped
     volumes:
       - ./mariadb_database:/var/lib/mysql
-    # networks:
-    #   demo:
-    #     aliases:
-    #       - "mariadb"
+    networks:
+      demo:
+        aliases:
+          - "mariadb"
   phpmyadmin:
     image: phpmyadmin
     container_name: phpmyadmin
@@ -82,10 +82,10 @@ services:
       - PMA_HOST=mariadb
       - PMA_PORT=3306
       - PMA_ARBITRARY=1
-    # networks:
-    #   demo:
-    #     aliases:
-    #       - "phpmyadmin"
+    networks:
+      demo:
+        aliases:
+          - "phpmyadmin"
     depends_on:
       - mariadb
   demo:
@@ -96,10 +96,10 @@ services:
     restart: unless-stopped
     environment:
       - SPRING_PROFILES_ACTIVE=development
-    # networks:
-    #   demo:
-    #     aliases:
-    #       - "demo"
+    networks:
+      demo:
+        aliases:
+          - "demo"
     depends_on:
       - config-server
 networks:
