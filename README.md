@@ -10,13 +10,17 @@ The objective of Spring Laboratory is to provide developers with a convenient an
 One of the key features of Spring Laboratory is its agility and portability. It can be easily initialized with a single command thanks to Docker, making it a versatile tool that can be used in a variety of development scenarios. Whether you are working on a single microservice or testing the interactions between multiple microservices, Spring Laboratory has you covered. It is a valuable resource for any developer working with the Spring framework.
 
 # Spring architecture
-![Spring Architecture Diagram](https://i.ibb.co/KN6YWR2/Spring-Architecture.jpg)
+![Spring Architecture Diagram](https://i.ibb.co/wMfGbzq/Spring-Architecture-1.jpg)
 
 Spring's architecture is composed of a few basic elements with one or more services. As we can see in the image above, we have the following components:
 - Gateway: Component in charge of validate access token through an authorization server and route request made from the client to appropriate service.
 - Discovery server: Component in charge of keeping services registries and provides the appropriate endpoint to gateway when needed. It is also used to check the services' status.
 - Configuration server: Component in charge of providing the appropriate configuration to each service or component. This component extracts configuration files from a Github repository where we can find one .Properties file for each service and environment. For example, we can find two .Properties files for a service called demo, one file for the development environment and another file for the production environment.
 - Authorization server: Component in charge of providing security to our system. This component manages everything related to access tokens provided by clients.
+
+As we can in the image above, there are two different scenarios:
+- Red arrows: Represent the initial setup of the architecture, when each service asks for its configuration properties to configuration server and registers to the discovery server.
+- Black arrows: Represent the way a service consumer uses a service through the gateway with authentication.
 
 # How to use
 1. Create a Git repository for storing .properties files following the tutorial you will find later in this document.
